@@ -1,58 +1,64 @@
 package handlers
 
 import (
-	"fmt"
+	"html/template"
 	"net/http"
+
+	"Flaming_Sword_Ministry/database"
+	"Flaming_Sword_Ministry/models"
 )
 
-// AddSermonHandler - Temporary test
+// AddSermonHandler displays the form and saves a sermon.
 func AddSermonHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("✅ AddSermonHandler reached")
+	if r.Method == http.MethodGet {
 
-	w.Header().Set("Content-Type", "text/html")
+		tmpl, err := template.ParseFiles("templates/add_sermon.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-	fmt.Fprint(w, `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Add Sermon</title>
-</head>
-<body>
+		tmpl.Execute(w, nil)
+		return
+	}
 
-    <h1>🎉 Add Sermon Page is Working!</h1>
+	if r.Method == http.MethodPost {
 
-    <p>If you can see this page, your routing is correct.</p>
+		sermon := models.Sermon{
+			Title:      r.FormValue("title"),
+			BibleVerse: r.FormValue("bible_verse"),
+			References: r.FormValue("references"),
+			Content:    r.FormValue("content"),
+			Category:   r.FormValue("category"),
+			Date:       r.FormValue("date"),
+			CreatedBy:  r.FormValue("created_by"),
+		}
 
-    <a href="/">Go Back Home</a>
+		err := database.CreateSermon(sermon)
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
 
-</body>
-</html>
-`)
+		http.Redirect(w, r, "/sermons", http.StatusSeeOther)
+	}
 }
 
-// ViewSermonsHandler - Temporary test
+// ViewSermonsHandler displays all sermons.
 func ViewSermonsHandler(w http.ResponseWriter, r *http.Request) {
 
-	fmt.Println("✅ ViewSermonsHandler reached")
+	sermons, err := database.GetAllSermons()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	w.Header().Set("Content-Type", "text/html")
+	tmpl, err := template.ParseFiles("templates/sermons.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	fmt.Fprint(w, `
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Sermons</title>
-</head>
-<body>
-
-    <h1>📖 Sermons Page</h1>
-
-    <p>No sermons yet.</p>
-
-    <a href="/admin/add-sermon">Add Sermon</a>
-
-</body>
-</html>
-`)
+	tmpl.Execute(w, sermons)
 }

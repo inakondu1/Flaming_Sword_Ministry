@@ -4,14 +4,14 @@ import (
 	"Flaming_Sword_Ministry/models"
 )
 
-// CreateSermon saves a sermon into the database.
+// Save a sermon
 func CreateSermon(sermon models.Sermon) error {
 
 	query := `
 	INSERT INTO sermons (
 		title,
 		bible_verse,
-		references,
+		scripture_references,
 		content,
 		category,
 		date,
@@ -34,24 +34,22 @@ func CreateSermon(sermon models.Sermon) error {
 	return err
 }
 
-// GetAllSermons returns every sermon in the database.
+// Get all sermons
 func GetAllSermons() ([]models.Sermon, error) {
 
-	query := `
-	SELECT
-		id,
-		title,
-		bible_verse,
-		references,
-		content,
-		category,
-		date,
-		created_by
-	FROM sermons
-	ORDER BY id DESC
-	`
-
-	rows, err := DB.Query(query)
+	rows, err := DB.Query(`
+		SELECT
+			id,
+			title,
+			bible_verse,
+			scripture_references,
+			content,
+			category,
+			date,
+			created_by
+		FROM sermons
+		ORDER BY id DESC
+	`)
 	if err != nil {
 		return nil, err
 	}
@@ -73,6 +71,7 @@ func GetAllSermons() ([]models.Sermon, error) {
 			&sermon.Date,
 			&sermon.CreatedBy,
 		)
+
 		if err != nil {
 			return nil, err
 		}
