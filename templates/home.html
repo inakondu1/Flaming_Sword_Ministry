@@ -1,145 +1,29 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flaming Sword Ministry International</title>
-
-    <link rel="stylesheet" href="/static/css/style.css">
+    <title>Church Home</title>
 </head>
-
 <body>
 
-<header>
+{{if .LoggedIn}}
+    <h3>Welcome {{.Name}} 🙏</h3>
+    <a href="/logout">Logout</a>
+{{else}}
+    <a href="/login">Login</a>
+    <a href="/register">Register</a>
+{{end}}
 
-    <div class="logo">
+<hr>
 
-        <h2>🔥 {{.ChurchName}}</h2>
+<h2>Announcements</h2>
 
+{{range .Announcements}}
+    <div>
+        <h3>{{.Title}}</h3>
+        <p>{{.Message}}</p>
     </div>
-
-    <nav>
-
-        <a href="/">Home</a>
-
-        <a href="/about">About</a>
-
-        <a href="/sermons">Sermons</a>
-
-        <a href="/bible-verse">Bible Verse</a>
-
-        <a href="/prayer">Prayer</a>
-
-        <a href="/announcement">Announcements</a>
-
-        <a href="/login">Login</a>
-
-        <a href="/register">Register</a>
-
-    </nav>
-
-</header>
-
-<section class="hero">
-
-    <h1>Raising Kingdom Ambassadors Through the Word of God</h1>
-
-    <p>
-        Welcome to Flaming Sword Ministry International
-    </p>
-
-    <button>Join Us</button>
-
-    <button>Watch Sermons</button>
-
-</section>
-
-<section>
-
-<h2>📖 Today's Bible Verse</h2>
-
-<p>
-John 3:16
-</p>
-
-</section>
-
-<section>
-
-<h2>🙏 Daily Prayer Point</h2>
-
-<p>
-
-{{.Prayer}}
-
-</p>
-
-</section>
-
-<section>
-
-<h2>🎤 Latest Sermons</h2>
-
-<p>
-
-No sermons yet.
-
-</p>
-
-</section>
-
-<section>
-
-<h2>📢 Announcements</h2>
-
-<p>
-
-Welcome to this week's service.
-
-</p>
-
-</section>
-
-<section>
-
-<h2>👨‍💼 Meet Our Pastor</h2>
-
-<h3>{{.PastorName}}</h3>
-<p>
-
-Lead Pastor
-
-Flaming Sword Ministry International
-
-</p>
-
-</section>
-
-<section>
-
-<h2>⏰ Service Schedule</h2>
-
-<ul>
-
-<li>Sunday Worship - 8:00 AM</li>
-
-<li>Tuesday Bible Study - 5:00 PM</li>
-
-<li>Friday Fire Night - 10:00 PM</li>
-
-</ul>
-
-</section>
-
-<footer>
-
-<p>
-
-© Flaming Sword Ministry International
-
-</p>
-
-</footer>
+    <hr>
+{{end}}
 
 </body>
 </html>

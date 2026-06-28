@@ -58,3 +58,18 @@ func createSermonsTable() {
 		log.Fatal(err)
 	}
 }
+func createAnnouncementsTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS announcements (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		title TEXT,
+		message TEXT,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);
+	`
+
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+}
