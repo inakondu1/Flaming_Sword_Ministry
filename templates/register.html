@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Register</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+<h1>Create Account</h1>
+
+<form action="/register" method="POST">
+
+    <label>Full Name</label><br>
+    <input type="text" name="fullname"><br><br>
+
+    <label>Phone Number</label><br>
+    <input type="text" name="phone"><br><br>
+
+    <label>Gender</label><br>
+    <select name="gender">
+        <option value="Male">Male</option>
+        <option value="Female">Female</option>
+    </select>
+
+    <br><br>
+
+    <label>Password</label><br>
+    <input type="password" name="password"><br><br>
+
+    <label>Confirm Password</label><br>
+    <input type="password" name="confirm_password"><br><br>
+
+    <button type="submit">Create Account</button>
+
+</form>
+
+</body>
+</html>
