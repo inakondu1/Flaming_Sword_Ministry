@@ -6,103 +6,78 @@ import (
 	"net/http"
 
 	"Flaming_Sword_Ministry/database"
+	"Flaming_Sword_Ministry/middleware"
 	"Flaming_Sword_Ministry/models"
 )
 
+// REGISTER
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Show registration page
 	if r.Method == http.MethodGet {
-
-		tmpl, err := template.ParseFiles("templates/register.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
+		tmpl, _ := template.ParseFiles("templates/register.html")
 		tmpl.Execute(w, nil)
 		return
 	}
 
-	// Handle registration form
 	if r.Method == http.MethodPost {
-		fmt.Println("Registration form submitted")
 
-		fullname := r.FormValue("fullname")
-		phone := r.FormValue("phone")
-		gender := r.FormValue("gender")
-		password := r.FormValue("password")
-		confirmPassword := r.FormValue("confirm_password")
+		r.ParseForm()
 
-		// Validation
-		if fullname == "" || phone == "" || gender == "" || password == "" || confirmPassword == "" {
-			http.Error(w, "Please fill in all fields.", http.StatusBadRequest)
-			return
-		}
-
-		if password != confirmPassword {
-			http.Error(w, "Passwords do not match.", http.StatusBadRequest)
-			return
-		}
-
-		// Create User object
 		user := models.User{
-			FullName: fullname,
-			Phone:    phone,
-			Gender:   gender,
-			Password: password, // We will hash this later
+			FullName: r.FormValue("fullname"),
+			Phone:    r.FormValue("phone"),
+			Gender:   r.FormValue("gender"),
+			Password: r.FormValue("password"),
 			Role:     "member",
 		}
 
-		// Save user
 		err := database.CreateUser(user)
-		if err != nil {
-			http.Error(w, "Registration failed: "+err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		fmt.Fprintln(w, "🎉 Registration Successful!")
-	}
-}
-
-func LoginHandler(w http.ResponseWriter, r *http.Request) {
-
-	// Show login page
-	if r.Method == http.MethodGet {
-
-		tmpl, err := template.ParseFiles("templates/login.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
+		http.Redirect(w, r, "/login", http.StatusSeeOther)
+	}
+}
+
+// LOGIN
+func LoginHandler(w http.ResponseWriter, r *http.Request) {
+
+	if r.Method == http.MethodGet {
+		tmpl, _ := template.ParseFiles("templates/login.html")
 		tmpl.Execute(w, nil)
 		return
 	}
 
-	// Process login
 	if r.Method == http.MethodPost {
+
+		r.ParseForm()
 
 		phone := r.FormValue("phone")
 		password := r.FormValue("password")
 
 		user, err := database.GetUserByPhone(phone)
-		if err != nil {
-			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
+		if err != nil || user.ID == 0 {
+			http.Error(w, "Invalid login", http.StatusUnauthorized)
 			return
 		}
 
 		if user.Password != password {
-			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
+			http.Error(w, "Invalid login", http.StatusUnauthorized)
 			return
 		}
 
-		// Redirect based on role
-		if user.Role == "admin" {
-			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
-			return
-		}
+		// SESSION START
+		session, _ := middleware.Store.Get(r, "church-session")
 
-		http.Redirect(w, r, "/", http.StatusSeeOther)
+		session.Values["user_id"] = user.ID
+		session.Values["name"] = user.FullName
+		session.Values["role"] = user.Role
+
+		session.Save(r, w)
+
+		fmt.Fprintf(w, "Welcome %s 🎉 Login successful!", user.FullName)
+		return
 	}
 }

@@ -46,3 +46,14 @@ func ViewUsersHandler(w http.ResponseWriter, r *http.Request) {
 		)
 	}
 }
+
+func AdminHandler(w http.ResponseWriter, r *http.Request) {
+
+	tmpl, err := template.ParseFiles("templates/admin.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	tmpl.Execute(w, nil)
+}

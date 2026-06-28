@@ -6,41 +6,30 @@ import (
 
 	"Flaming_Sword_Ministry/database"
 	"Flaming_Sword_Ministry/handlers"
+	"Flaming_Sword_Ministry/middleware"
 )
 
 func main() {
 
-	// Connect to the database
 	database.ConnectDB()
 
-	// Serve static files
-	http.Handle(
-		"/static/",
-		http.StripPrefix(
-			"/static/",
+	http.Handle("/static/",
+		http.StripPrefix("/static/",
 			http.FileServer(http.Dir("static")),
 		),
 	)
 
-	// =========================
-	// Public Routes
-	// =========================
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/about", handlers.AboutHandler)
-
-	// Authentication
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/register", handlers.RegisterHandler)
+	http.HandleFunc("/logout", handlers.LogoutHandler)
 
-	// Sermons
-	http.HandleFunc("/sermons", handlers.ViewSermonsHandler)
-	http.HandleFunc("/admin/add-sermon", handlers.AddSermonHandler)
-
-	// Admin
-	http.HandleFunc("/admin/users", handlers.ViewUsersHandler)
-	http.HandleFunc("/admin/dashboard", handlers.AdminDashboardHandler)
+	// 🔐 IMPORTANT: USE middleware HERE (fixes "not used" error)
+	http.HandleFunc("/admin",
+		middleware.AdminOnly(handlers.AdminHandler),
+	)
 
 	log.Println("🚀 Server running on http://localhost:8080")
-
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }
