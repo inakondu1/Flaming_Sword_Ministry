@@ -27,6 +27,7 @@ func main() {
 	http.HandleFunc("/about", handlers.AboutHandler)
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/register", handlers.RegisterHandler)
+	http.HandleFunc("/admin/users", handlers.ViewUsersHandler)
 
 	log.Println("🚀 Server running on http://localhost:8080")
 

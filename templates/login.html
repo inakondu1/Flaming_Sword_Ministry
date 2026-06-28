@@ -2,21 +2,20 @@
 <html>
 <head>
     <title>Login</title>
-    <link rel="stylesheet" href="/static/css/style.css">
 </head>
 <body>
 
-<h1>Member Login</h1>
+<h1>Login</h1>
 
-<form>
+<form action="/login" method="POST">
 
-<label>Phone Number</label><br>
-<input type="text" name="phone"><br><br>
+    <label>Phone Number</label><br>
+    <input type="text" name="phone"><br><br>
 
-<label>Password</label><br>
-<input type="password" name="password"><br><br>
+    <label>Password</label><br>
+    <input type="password" name="password"><br><br>
 
-<button>Login</button>
+    <button type="submit">Login</button>
 
 </form>
 

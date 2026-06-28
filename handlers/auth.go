@@ -68,13 +68,11 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-
 		tmpl, err := template.ParseFiles("templates/login.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
-
 		tmpl.Execute(w, nil)
 		return
 	}
@@ -84,10 +82,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 		phone := r.FormValue("phone")
 		password := r.FormValue("password")
 
-		fmt.Println("Login Attempt")
-		fmt.Println("Phone:", phone)
-		fmt.Println("Password:", password)
+		user, err := database.GetUserByPhone(phone)
+		if err != nil || user.Password != password {
+			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
+			return
+		}
 
-		fmt.Fprintln(w, "Login feature coming next...")
+		fmt.Fprintf(w, "Welcome %s 🎉 Login successful!", user.FullName)
 	}
 }
