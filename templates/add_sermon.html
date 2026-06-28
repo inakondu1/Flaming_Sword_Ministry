@@ -4,54 +4,96 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Add Sermon</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+
+    <style>
+
+        body{
+            font-family:Arial;
+            background:#f4f4f4;
+        }
+
+        .container{
+            width:70%;
+            margin:auto;
+            margin-top:30px;
+            background:white;
+            padding:20px;
+            border-radius:10px;
+        }
+
+        input, textarea, select{
+            width:100%;
+            padding:10px;
+            margin-top:5px;
+            margin-bottom:20px;
+        }
+
+        button{
+            background:#8B0000;
+            color:white;
+            padding:12px 20px;
+            border:none;
+            cursor:pointer;
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-    <h1>📖 Add New Sermon</h1>
+<div class="container">
 
-    <form action="/admin/add-sermon" method="POST">
+<h1>Add Sermon</h1>
 
-        <label>Title</label><br>
-        <input type="text" name="title" required>
-        <br><br>
+<form action="/admin/add-sermon" method="POST">
 
-        <label>Main Bible Verse</label><br>
-        <input type="text" name="bible_verse" required>
-        <br><br>
+<label>Title</label>
+<input type="text" name="title" required>
 
-        <label>References</label><br>
-        <input type="text" name="references" placeholder="Example: Romans 8, James 2">
-        <br><br>
+<label>Bible Verse</label>
+<input type="text" name="bible_verse" required>
 
-        <label>Category</label><br>
-        <select name="category">
-            <option value="Sunday Service">Sunday Service</option>
-            <option value="Bible Study">Bible Study</option>
-            <option value="Prayer Meeting">Prayer Meeting</option>
-            <option value="Youth Service">Youth Service</option>
-        </select>
-        <br><br>
+<label>Scripture References</label>
+<input type="text" name="references">
 
-        <label>Date</label><br>
-        <input type="date" name="date">
-        <br><br>
+<label>Category</label>
 
-        <label>Preached By</label><br>
-        <input type="text" name="created_by" placeholder="Pastor's Name">
-        <br><br>
+<select name="category">
 
-        <label>Sermon Content</label><br>
-        <textarea name="content" rows="12" cols="70" required></textarea>
-        <br><br>
+<option>Sunday Service</option>
 
-        <button type="submit">Save Sermon</button>
+<option>Revival</option>
 
-    </form>
+<option>Bible Study</option>
 
-    <br>
+<option>Youth Service</option>
 
-    <a href="/sermons">View All Sermons</a>
+<option>Prayer Meeting</option>
+
+</select>
+
+<label>Date</label>
+<input type="date" name="date">
+
+<label>Preacher</label>
+<input type="text" name="created_by">
+
+<label>Sermon</label>
+
+<textarea
+name="content"
+rows="15"
+required>
+</textarea>
+
+<button type="submit">
+Save Sermon
+</button>
+
+</form>
+
+</div>
 
 </body>
 </html>

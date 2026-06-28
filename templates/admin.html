@@ -1,13 +1,133 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard</title>
+
+    <style>
+
+        body{
+            font-family:Arial, sans-serif;
+            background:#f4f4f4;
+            margin:0;
+        }
+
+        header{
+            background:#8B0000;
+            color:white;
+            padding:20px;
+        }
+
+        header h1{
+            margin:0;
+        }
+
+        .container{
+            width:90%;
+            margin:auto;
+            margin-top:30px;
+        }
+
+        .cards{
+            display:flex;
+            gap:20px;
+            flex-wrap:wrap;
+        }
+
+        .card{
+            background:white;
+            padding:20px;
+            width:250px;
+            border-radius:10px;
+            box-shadow:0 2px 8px rgba(0,0,0,.2);
+        }
+
+        .card h2{
+            margin-top:0;
+            color:#8B0000;
+        }
+
+        .menu{
+            margin-top:40px;
+        }
+
+        .menu a{
+            display:block;
+            width:250px;
+            margin-bottom:15px;
+            padding:15px;
+            background:#8B0000;
+            color:white;
+            text-decoration:none;
+            border-radius:6px;
+        }
+
+        .menu a:hover{
+            background:#a40000;
+        }
+
+    </style>
+
 </head>
+
 <body>
 
-<h1>Church Admin Dashboard</h1>
+<header>
 
-<p>Welcome Pastor/Admin</p>
+<h1>🔥 Flaming Sword Ministry International</h1>
+
+<p>Welcome {{.Name}} 🙏</p>
+
+</header>
+
+<div class="container">
+
+<h2>Dashboard</h2>
+
+<div class="cards">
+
+<div class="card">
+
+<h2>Members</h2>
+
+<h1>{{.TotalUsers}}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>Sermons</h2>
+
+<h1>{{.TotalSermons}}</h1>
+
+</div>
+
+<div class="card">
+
+<h2>Announcements</h2>
+
+<h1>{{.TotalAnnouncements}}</h1>
+
+</div>
+
+</div>
+
+<div class="menu">
+
+<h2>Administration</h2>
+
+<a href="/admin/add-sermon">📖 Add Sermon</a>
+
+<a href="/sermons">📚 View Sermons</a>
+
+<a href="/admin/announcement">📢 Create Announcement</a>
+
+<a href="/logout">🚪 Logout</a>
+
+</div>
+
+</div>
 
 </body>
 </html>

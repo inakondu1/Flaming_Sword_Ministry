@@ -11,13 +11,22 @@ import (
 
 func main() {
 
+	// Connect Database
 	database.ConnectDB()
 
-	http.Handle("/static/",
-		http.StripPrefix("/static/",
+	// Static Files
+	http.Handle(
+		"/static/",
+		http.StripPrefix(
+			"/static/",
 			http.FileServer(http.Dir("static")),
 		),
 	)
+
+	// =========================
+	// Public Routes
+	// =========================
+
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/about", handlers.AboutHandler)
 
@@ -25,14 +34,30 @@ func main() {
 	http.HandleFunc("/register", handlers.RegisterHandler)
 	http.HandleFunc("/logout", handlers.LogoutHandler)
 
+	http.HandleFunc("/sermons", handlers.ViewSermonsHandler)
+	http.HandleFunc("/announcement", handlers.ViewAnnouncementsHandler)
+
+	// =========================
+	// Admin Routes
+	// =========================
+
 	http.HandleFunc("/admin",
 		middleware.AdminOnly(handlers.AdminHandler),
 	)
 
-	http.HandleFunc("/admin/announcement",
+	http.HandleFunc("/admin/users",
+		middleware.AdminOnly(handlers.ViewUsersHandler),
+	)
+
+	http.HandleFunc("/admin/add-sermon",
+		middleware.AdminOnly(handlers.AddSermonHandler),
+	)
+
+	http.HandleFunc("/admin/add-announcement",
 		middleware.AdminOnly(handlers.CreateAnnouncementHandler),
 	)
 
 	log.Println("🚀 Server running on http://localhost:8080")
+
 	log.Fatal(http.ListenAndServe(":8080", nil))
 }

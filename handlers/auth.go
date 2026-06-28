@@ -1,7 +1,6 @@
 package handlers
 
 import (
-	"fmt"
 	"html/template"
 	"net/http"
 
@@ -68,16 +67,25 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 			return
 		}
 
-		// SESSION START
+		// Save session
 		session, _ := middleware.Store.Get(r, "church-session")
 
 		session.Values["user_id"] = user.ID
 		session.Values["name"] = user.FullName
 		session.Values["role"] = user.Role
 
-		session.Save(r, w)
+		err = session.Save(r, w)
+		if err != nil {
+			http.Error(w, "Unable to save session", http.StatusInternalServerError)
+			return
+		}
 
-		fmt.Fprintf(w, "Welcome %s 🎉 Login successful!", user.FullName)
-		return
+		// Redirect based on role
+		if user.Role == "admin" {
+			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

@@ -20,10 +20,10 @@ func ConnectDB() {
 
 	createUsersTable()
 	createSermonsTable()
+	createAnnouncementsTable()
 
 	log.Println("✅ Database connected successfully.")
 }
-
 func createUsersTable() {
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
@@ -44,11 +44,17 @@ func createUsersTable() {
 }
 
 func createSermonsTable() {
+
 	query := `
 	CREATE TABLE IF NOT EXISTS sermons (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT,
-		content TEXT,
+		title TEXT NOT NULL,
+		bible_verse TEXT NOT NULL,
+		scripture_references TEXT,
+		content TEXT NOT NULL,
+		category TEXT,
+		date TEXT,
+		created_by TEXT,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
 	`
