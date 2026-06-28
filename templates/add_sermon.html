@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Sermon</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+
+    <h1>📖 Add New Sermon</h1>
+
+    <form action="/admin/add-sermon" method="POST">
+
+        <label>Title</label><br>
+        <input type="text" name="title" required>
+        <br><br>
+
+        <label>Main Bible Verse</label><br>
+        <input type="text" name="bible_verse" required>
+        <br><br>
+
+        <label>References</label><br>
+        <input type="text" name="references" placeholder="Example: Romans 8, James 2">
+        <br><br>
+
+        <label>Category</label><br>
+        <select name="category">
+            <option value="Sunday Service">Sunday Service</option>
+            <option value="Bible Study">Bible Study</option>
+            <option value="Prayer Meeting">Prayer Meeting</option>
+            <option value="Youth Service">Youth Service</option>
+        </select>
+        <br><br>
+
+        <label>Date</label><br>
+        <input type="date" name="date">
+        <br><br>
+
+        <label>Preached By</label><br>
+        <input type="text" name="created_by" placeholder="Pastor's Name">
+        <br><br>
+
+        <label>Sermon Content</label><br>
+        <textarea name="content" rows="12" cols="70" required></textarea>
+        <br><br>
+
+        <button type="submit">Save Sermon</button>
+
+    </form>
+
+    <br>
+
+    <a href="/sermons">View All Sermons</a>
+
+</body>
+</html>

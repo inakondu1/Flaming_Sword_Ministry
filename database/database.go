@@ -19,6 +19,7 @@ func ConnectDB() {
 	}
 
 	createUsersTable()
+	createSermonsTable()
 
 	log.Println("✅ Database connected successfully.")
 }
@@ -41,6 +42,27 @@ func createUsersTable() {
 	}
 
 	log.Println("✅ Users table is ready.")
+}
+func createSermonsTable() {
+	query := `
+	CREATE TABLE IF NOT EXISTS sermons (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		title TEXT NOT NULL,
+		bible_verse TEXT NOT NULL,
+		scripture_references TEXT,
+		content TEXT NOT NULL,
+		category TEXT,
+		date TEXT,
+		created_by TEXT,
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);`
+
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("✅ Sermons table is ready.")
 }
 func GetAllUsers() ([]models.User, error) {
 

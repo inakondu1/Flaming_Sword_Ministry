@@ -67,27 +67,42 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
+	// Show login page
 	if r.Method == http.MethodGet {
+
 		tmpl, err := template.ParseFiles("templates/login.html")
 		if err != nil {
 			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
+
 		tmpl.Execute(w, nil)
 		return
 	}
 
+	// Process login
 	if r.Method == http.MethodPost {
 
 		phone := r.FormValue("phone")
 		password := r.FormValue("password")
 
 		user, err := database.GetUserByPhone(phone)
-		if err != nil || user.Password != password {
+		if err != nil {
 			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
 			return
 		}
 
-		fmt.Fprintf(w, "Welcome %s 🎉 Login successful!", user.FullName)
+		if user.Password != password {
+			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
+			return
+		}
+
+		// Redirect based on role
+		if user.Role == "admin" {
+			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
+			return
+		}
+
+		http.Redirect(w, r, "/", http.StatusSeeOther)
 	}
 }

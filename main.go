@@ -22,12 +22,23 @@ func main() {
 		),
 	)
 
-	// Routes
+	// =========================
+	// Public Routes
+	// =========================
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/about", handlers.AboutHandler)
+
+	// Authentication
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/register", handlers.RegisterHandler)
+
+	// Sermons
+	http.HandleFunc("/sermons", handlers.ViewSermonsHandler)
+	http.HandleFunc("/admin/add-sermon", handlers.AddSermonHandler)
+
+	// Admin
 	http.HandleFunc("/admin/users", handlers.ViewUsersHandler)
+	http.HandleFunc("/admin/dashboard", handlers.AdminDashboardHandler)
 
 	log.Println("🚀 Server running on http://localhost:8080")
 
