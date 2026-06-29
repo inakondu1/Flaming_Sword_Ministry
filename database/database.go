@@ -21,6 +21,7 @@ func ConnectDB() {
 	createUsersTable()
 	createSermonsTable()
 	createAnnouncementsTable()
+	createPrayerTable()
 
 	log.Println("✅ Database connected successfully.")
 }
@@ -94,4 +95,24 @@ func createAnnouncementsTable() {
 	}
 
 	log.Println("✅ Announcements table ready.")
+}
+func createPrayerTable() {
+
+	query := `
+	CREATE TABLE IF NOT EXISTS prayer_requests (
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
+		name TEXT NOT NULL,
+		phone TEXT,
+		request TEXT NOT NULL,
+		status TEXT DEFAULT 'Pending',
+		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
+	);
+	`
+
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	log.Println("✅ Prayer Requests table ready.")
 }

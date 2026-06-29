@@ -22,11 +22,32 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 
 	name, _ := session.Values["name"].(string)
 
-	totalUsers, _ := database.CountUsers()
-	totalSermons, _ := database.CountSermons()
-	totalAnnouncements, _ := database.CountAnnouncements()
+	totalUsers, err := database.CountUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-	users, _ := database.GetAllUsers()
+	totalSermons, err := database.CountSermons()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	totalAnnouncements, err := database.CountAnnouncements()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	users, err := database.GetAllUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// DEBUG: Check how many users were loaded
+	println("TOTAL USERS:", len(users))
 
 	data := AdminData{
 		Name:               name,
@@ -45,11 +66,9 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 }
-
-// ================= VIEW USERS =================
-
 func ViewUsersHandler(w http.ResponseWriter, r *http.Request) {
 
 	users, err := database.GetAllUsers()
