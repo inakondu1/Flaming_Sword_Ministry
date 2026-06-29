@@ -9,25 +9,33 @@ import (
 	"Flaming_Sword_Ministry/models"
 )
 
-// REGISTER
+// ================= REGISTER =================
+
 func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-		tmpl, _ := template.ParseFiles("templates/register.html")
+
+		tmpl, err := template.ParseFiles("templates/register.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		tmpl.Execute(w, nil)
 		return
 	}
 
 	if r.Method == http.MethodPost {
 
-		r.ParseForm()
-
 		user := models.User{
 			FullName: r.FormValue("fullname"),
 			Phone:    r.FormValue("phone"),
 			Gender:   r.FormValue("gender"),
 			Password: r.FormValue("password"),
-			Role:     "member",
+
+			// Change this to "member" later if you don't
+			// want every new account to be an admin.
+			Role: "admin",
 		}
 
 		err := database.CreateUser(user)
@@ -40,34 +48,38 @@ func RegisterHandler(w http.ResponseWriter, r *http.Request) {
 	}
 }
 
-// LOGIN
+// ================= LOGIN =================
+
 func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 	if r.Method == http.MethodGet {
-		tmpl, _ := template.ParseFiles("templates/login.html")
+
+		tmpl, err := template.ParseFiles("templates/login.html")
+		if err != nil {
+			http.Error(w, err.Error(), http.StatusInternalServerError)
+			return
+		}
+
 		tmpl.Execute(w, nil)
 		return
 	}
 
 	if r.Method == http.MethodPost {
 
-		r.ParseForm()
-
 		phone := r.FormValue("phone")
 		password := r.FormValue("password")
 
 		user, err := database.GetUserByPhone(phone)
-		if err != nil || user.ID == 0 {
-			http.Error(w, "Invalid login", http.StatusUnauthorized)
+		if err != nil {
+			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
 			return
 		}
 
 		if user.Password != password {
-			http.Error(w, "Invalid login", http.StatusUnauthorized)
+			http.Error(w, "Invalid phone or password", http.StatusUnauthorized)
 			return
 		}
 
-		// Save session
 		session, _ := middleware.Store.Get(r, "church-session")
 
 		session.Values["user_id"] = user.ID
@@ -76,13 +88,12 @@ func LoginHandler(w http.ResponseWriter, r *http.Request) {
 
 		err = session.Save(r, w)
 		if err != nil {
-			http.Error(w, "Unable to save session", http.StatusInternalServerError)
+			http.Error(w, err.Error(), http.StatusInternalServerError)
 			return
 		}
 
-		// Redirect based on role
 		if user.Role == "admin" {
-			http.Redirect(w, r, "/admin/dashboard", http.StatusSeeOther)
+			http.Redirect(w, r, "/admin", http.StatusSeeOther)
 			return
 		}
 

@@ -4,7 +4,8 @@ import (
 	"Flaming_Sword_Ministry/models"
 )
 
-// Save a sermon
+// ================= CREATE SERMON =================
+
 func CreateSermon(sermon models.Sermon) error {
 
 	query := `
@@ -34,7 +35,8 @@ func CreateSermon(sermon models.Sermon) error {
 	return err
 }
 
-// Get all sermons
+// ================= GET ALL SERMONS =================
+
 func GetAllSermons() ([]models.Sermon, error) {
 
 	rows, err := DB.Query(`
@@ -46,7 +48,8 @@ func GetAllSermons() ([]models.Sermon, error) {
 			content,
 			category,
 			date,
-			created_by
+			created_by,
+			created_at
 		FROM sermons
 		ORDER BY id DESC
 	`)
@@ -70,8 +73,8 @@ func GetAllSermons() ([]models.Sermon, error) {
 			&sermon.Category,
 			&sermon.Date,
 			&sermon.CreatedBy,
+			&sermon.CreatedAt,
 		)
-
 		if err != nil {
 			return nil, err
 		}
@@ -80,4 +83,97 @@ func GetAllSermons() ([]models.Sermon, error) {
 	}
 
 	return sermons, nil
+}
+
+// ================= GET ONE SERMON =================
+
+func GetSermonByID(id int) (models.Sermon, error) {
+
+	var sermon models.Sermon
+
+	query := `
+	SELECT
+		id,
+		title,
+		bible_verse,
+		scripture_references,
+		content,
+		category,
+		date,
+		created_by,
+		created_at
+	FROM sermons
+	WHERE id = ?
+	`
+
+	err := DB.QueryRow(query, id).Scan(
+		&sermon.ID,
+		&sermon.Title,
+		&sermon.BibleVerse,
+		&sermon.References,
+		&sermon.Content,
+		&sermon.Category,
+		&sermon.Date,
+		&sermon.CreatedBy,
+		&sermon.CreatedAt,
+	)
+
+	return sermon, err
+}
+
+// ================= UPDATE SERMON =================
+
+func UpdateSermon(sermon models.Sermon) error {
+
+	query := `
+	UPDATE sermons
+	SET
+		title=?,
+		bible_verse=?,
+		scripture_references=?,
+		content=?,
+		category=?,
+		date=?,
+		created_by=?
+	WHERE id=?
+	`
+
+	_, err := DB.Exec(
+		query,
+		sermon.Title,
+		sermon.BibleVerse,
+		sermon.References,
+		sermon.Content,
+		sermon.Category,
+		sermon.Date,
+		sermon.CreatedBy,
+		sermon.ID,
+	)
+
+	return err
+}
+
+// ================= DELETE SERMON =================
+
+func DeleteSermon(id int) error {
+
+	_, err := DB.Exec(
+		"DELETE FROM sermons WHERE id=?",
+		id,
+	)
+
+	return err
+}
+
+// ================= COUNT SERMONS =================
+
+func CountSermons() (int, error) {
+
+	var count int
+
+	err := DB.QueryRow(
+		"SELECT COUNT(*) FROM sermons",
+	).Scan(&count)
+
+	return count, err
 }

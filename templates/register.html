@@ -1,38 +1,114 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <title>Register</title>
-    <link rel="stylesheet" href="/static/css/style.css">
+
+<meta charset="UTF-8">
+
+<title>Register</title>
+
+<style>
+
+body{
+    font-family:Arial;
+    background:#f4f4f4;
+}
+
+.container{
+    width:450px;
+    margin:40px auto;
+    background:white;
+    padding:30px;
+    border-radius:10px;
+    box-shadow:0 0 10px gray;
+}
+
+h1{
+    text-align:center;
+    color:#8B0000;
+}
+
+input,select{
+    width:100%;
+    padding:12px;
+    margin-top:10px;
+    margin-bottom:20px;
+}
+
+button{
+    width:100%;
+    padding:12px;
+    background:#8B0000;
+    color:white;
+    border:none;
+}
+
+</style>
+
 </head>
+
 <body>
+
+<div class="container">
 
 <h1>Create Account</h1>
 
 <form action="/register" method="POST">
 
-    <label>Full Name</label><br>
-    <input type="text" name="fullname"><br><br>
+<label>Full Name</label>
 
-    <label>Phone Number</label><br>
-    <input type="text" name="phone"><br><br>
+<input
+type="text"
+name="fullname"
+required
+>
 
-    <label>Gender</label><br>
-    <select name="gender">
-        <option value="Male">Male</option>
-        <option value="Female">Female</option>
-    </select>
+<label>Phone Number</label>
 
-    <br><br>
+<input
+type="text"
+name="phone"
+required
+>
 
-    <label>Password</label><br>
-    <input type="password" name="password"><br><br>
+<label>Gender</label>
 
-    <label>Confirm Password</label><br>
-    <input type="password" name="confirm_password"><br><br>
+<select name="gender">
 
-    <button type="submit">Create Account</button>
+<option>Male</option>
+
+<option>Female</option>
+
+</select>
+
+<label>Password</label>
+
+<input
+type="password"
+name="password"
+required
+>
+
+<button>
+
+Register
+
+</button>
 
 </form>
 
+<br>
+
+<a href="/login">
+
+Already have an account?
+
+Login
+
+</a>
+
+</div>
+
 </body>
+
 </html>

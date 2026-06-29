@@ -24,15 +24,19 @@ func ConnectDB() {
 
 	log.Println("✅ Database connected successfully.")
 }
+
+// ================= USERS =================
+
 func createUsersTable() {
+
 	query := `
 	CREATE TABLE IF NOT EXISTS users (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		fullname TEXT,
-		phone TEXT UNIQUE,
-		gender TEXT,
-		password TEXT,
-		role TEXT,
+		fullname TEXT NOT NULL,
+		phone TEXT NOT NULL UNIQUE,
+		gender TEXT NOT NULL,
+		password TEXT NOT NULL,
+		role TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
 	`
@@ -41,7 +45,11 @@ func createUsersTable() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("✅ Users table ready.")
 }
+
+// ================= SERMONS =================
 
 func createSermonsTable() {
 
@@ -63,13 +71,19 @@ func createSermonsTable() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("✅ Sermons table ready.")
 }
+
+// ================= ANNOUNCEMENTS =================
+
 func createAnnouncementsTable() {
+
 	query := `
 	CREATE TABLE IF NOT EXISTS announcements (
 		id INTEGER PRIMARY KEY AUTOINCREMENT,
-		title TEXT,
-		message TEXT,
+		title TEXT NOT NULL,
+		message TEXT NOT NULL,
 		created_at DATETIME DEFAULT CURRENT_TIMESTAMP
 	);
 	`
@@ -78,4 +92,6 @@ func createAnnouncementsTable() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+	log.Println("✅ Announcements table ready.")
 }

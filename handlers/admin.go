@@ -8,10 +8,16 @@ import (
 	"Flaming_Sword_Ministry/middleware"
 )
 
-// AdminHandler displays the admin dashboard.
+type AdminData struct {
+	Name               string
+	TotalUsers         int
+	TotalSermons       int
+	TotalAnnouncements int
+	Users              interface{}
+}
+
 func AdminHandler(w http.ResponseWriter, r *http.Request) {
 
-	// Get current session
 	session, _ := middleware.Store.Get(r, "church-session")
 
 	name, _ := session.Values["name"].(string)
@@ -20,16 +26,14 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	totalSermons, _ := database.CountSermons()
 	totalAnnouncements, _ := database.CountAnnouncements()
 
-	data := struct {
-		Name               string
-		TotalUsers         int
-		TotalSermons       int
-		TotalAnnouncements int
-	}{
+	users, _ := database.GetAllUsers()
+
+	data := AdminData{
 		Name:               name,
 		TotalUsers:         totalUsers,
 		TotalSermons:       totalSermons,
 		TotalAnnouncements: totalAnnouncements,
+		Users:              users,
 	}
 
 	tmpl, err := template.ParseFiles("templates/admin.html")
@@ -41,43 +45,27 @@ func AdminHandler(w http.ResponseWriter, r *http.Request) {
 	err = tmpl.Execute(w, data)
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
 	}
 }
 
-// CreateAnnouncementHandler displays the announcement form and saves announcements.
-func CreateAnnouncementHandler(w http.ResponseWriter, r *http.Request) {
+// ================= VIEW USERS =================
 
-	// Display the form
-	if r.Method == http.MethodGet {
+func ViewUsersHandler(w http.ResponseWriter, r *http.Request) {
 
-		tmpl, err := template.ParseFiles("templates/announcement.html")
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		err = tmpl.Execute(w, nil)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
+	users, err := database.GetAllUsers()
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 
-	// Save the announcement
-	if r.Method == http.MethodPost {
+	tmpl, err := template.ParseFiles("templates/users.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
 
-		title := r.FormValue("title")
-		message := r.FormValue("message")
-
-		err := database.CreateAnnouncement(title, message)
-		if err != nil {
-			http.Error(w, err.Error(), http.StatusInternalServerError)
-			return
-		}
-
-		http.Redirect(w, r, "/admin", http.StatusSeeOther)
+	err = tmpl.Execute(w, users)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 }

@@ -1,73 +1,119 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Admin Dashboard</title>
 
-    <style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-        body{
-            font-family:Arial, sans-serif;
-            background:#f4f4f4;
-            margin:0;
-        }
+<title>Admin Dashboard</title>
 
-        header{
-            background:#8B0000;
-            color:white;
-            padding:20px;
-        }
+<style>
 
-        header h1{
-            margin:0;
-        }
+*{
+    margin:0;
+    padding:0;
+    box-sizing:border-box;
+}
 
-        .container{
-            width:90%;
-            margin:auto;
-            margin-top:30px;
-        }
+body{
+    font-family:Arial, Helvetica, sans-serif;
+    background:#f4f4f4;
+}
 
-        .cards{
-            display:flex;
-            gap:20px;
-            flex-wrap:wrap;
-        }
+header{
+    background:#8B0000;
+    color:white;
+    padding:20px;
+}
 
-        .card{
-            background:white;
-            padding:20px;
-            width:250px;
-            border-radius:10px;
-            box-shadow:0 2px 8px rgba(0,0,0,.2);
-        }
+header h1{
+    text-align:center;
+}
 
-        .card h2{
-            margin-top:0;
-            color:#8B0000;
-        }
+nav{
+    margin-top:15px;
+    text-align:center;
+}
 
-        .menu{
-            margin-top:40px;
-        }
+nav a{
+    color:white;
+    text-decoration:none;
+    margin:0 12px;
+    font-weight:bold;
+}
 
-        .menu a{
-            display:block;
-            width:250px;
-            margin-bottom:15px;
-            padding:15px;
-            background:#8B0000;
-            color:white;
-            text-decoration:none;
-            border-radius:6px;
-        }
+.container{
+    width:95%;
+    margin:30px auto;
+}
 
-        .menu a:hover{
-            background:#a40000;
-        }
+.cards{
+    display:flex;
+    gap:20px;
+    flex-wrap:wrap;
+    margin-bottom:30px;
+}
 
-    </style>
+.card{
+    flex:1;
+    min-width:220px;
+    background:white;
+    padding:20px;
+    border-radius:8px;
+    text-align:center;
+    box-shadow:0 2px 8px rgba(0,0,0,.1);
+}
+
+.card h2{
+    color:#8B0000;
+    font-size:40px;
+    margin-top:10px;
+}
+
+.actions{
+    background:white;
+    padding:20px;
+    margin-bottom:30px;
+    border-radius:8px;
+}
+
+.actions a{
+    display:inline-block;
+    margin:10px;
+    padding:12px 18px;
+    background:#8B0000;
+    color:white;
+    text-decoration:none;
+    border-radius:5px;
+}
+
+table{
+    width:100%;
+    border-collapse:collapse;
+    background:white;
+}
+
+table th{
+    background:#8B0000;
+    color:white;
+    padding:12px;
+}
+
+table td{
+    padding:12px;
+    border-bottom:1px solid #ddd;
+}
+
+footer{
+    text-align:center;
+    padding:20px;
+    background:#222;
+    color:white;
+    margin-top:40px;
+}
+
+</style>
 
 </head>
 
@@ -75,59 +121,114 @@
 
 <header>
 
-<h1>🔥 Flaming Sword Ministry International</h1>
+<h1>🔥 Flaming Sword Ministry Admin Dashboard</h1>
 
-<p>Welcome {{.Name}} 🙏</p>
+<nav>
+
+<a href="/">Home</a>
+<a href="/sermons">Sermons</a>
+<a href="/announcement">Announcements</a>
+<a href="/logout">Logout</a>
+
+</nav>
 
 </header>
 
 <div class="container">
 
-<h2>Dashboard</h2>
+<h2>Welcome {{.Name}}</h2>
+
+<br>
 
 <div class="cards">
 
 <div class="card">
 
-<h2>Members</h2>
+<h3>Total Members</h3>
 
-<h1>{{.TotalUsers}}</h1>
-
-</div>
-
-<div class="card">
-
-<h2>Sermons</h2>
-
-<h1>{{.TotalSermons}}</h1>
+<h2>{{.TotalUsers}}</h2>
 
 </div>
 
 <div class="card">
 
-<h2>Announcements</h2>
+<h3>Total Sermons</h3>
 
-<h1>{{.TotalAnnouncements}}</h1>
+<h2>{{.TotalSermons}}</h2>
+
+</div>
+
+<div class="card">
+
+<h3>Announcements</h3>
+
+<h2>{{.TotalAnnouncements}}</h2>
 
 </div>
 
 </div>
 
-<div class="menu">
+<div class="actions">
 
-<h2>Administration</h2>
+<h2>Quick Actions</h2>
 
-<a href="/admin/add-sermon">📖 Add Sermon</a>
+<br>
 
-<a href="/sermons">📚 View Sermons</a>
+<a href="/admin/add-sermon">➕ Add Sermon</a>
 
-<a href="/admin/announcement">📢 Create Announcement</a>
+<a href="/admin/add-announcement">📢 Add Announcement</a>
 
-<a href="/logout">🚪 Logout</a>
+<a href="/admin/users">👥 View Members</a>
+
+</div>
+
+<h2>Registered Members</h2>
+
+<br>
+
+<table>
+
+<tr>
+
+<th>ID</th>
+<th>Name</th>
+<th>Phone</th>
+<th>Gender</th>
+<th>Role</th>
+
+</tr>
+
+{{range .Users}}
+
+<tr>
+
+<td>{{.ID}}</td>
+<td>{{.FullName}}</td>
+<td>{{.Phone}}</td>
+<td>{{.Gender}}</td>
+<td>{{.Role}}</td>
+
+</tr>
+
+{{else}}
+
+<tr>
+
+<td colspan="5">No registered members.</td>
+
+</tr>
+
+{{end}}
+
+</table>
 
 </div>
 
-</div>
+<footer>
+
+<p>Flaming Sword Ministry International © 2026</p>
+
+</footer>
 
 </body>
 </html>

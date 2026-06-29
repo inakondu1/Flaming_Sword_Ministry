@@ -9,4 +9,5 @@ type Sermon struct {
 	Category   string
 	Date       string
 	CreatedBy  string
+	CreatedAt  string
 }

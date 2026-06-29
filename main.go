@@ -27,20 +27,18 @@ func main() {
 	// Public Routes
 	// =========================
 
+	// Public Routes
 	http.HandleFunc("/", handlers.HomeHandler)
 	http.HandleFunc("/about", handlers.AboutHandler)
-
 	http.HandleFunc("/login", handlers.LoginHandler)
 	http.HandleFunc("/register", handlers.RegisterHandler)
 	http.HandleFunc("/logout", handlers.LogoutHandler)
 
 	http.HandleFunc("/sermons", handlers.ViewSermonsHandler)
+	http.HandleFunc("/sermon", handlers.ViewSingleSermonHandler)
 	http.HandleFunc("/announcement", handlers.ViewAnnouncementsHandler)
 
-	// =========================
 	// Admin Routes
-	// =========================
-
 	http.HandleFunc("/admin",
 		middleware.AdminOnly(handlers.AdminHandler),
 	)
@@ -53,10 +51,17 @@ func main() {
 		middleware.AdminOnly(handlers.AddSermonHandler),
 	)
 
+	http.HandleFunc("/admin/edit-sermon",
+		middleware.AdminOnly(handlers.EditSermonHandler),
+	)
+
+	http.HandleFunc("/admin/delete-sermon",
+		middleware.AdminOnly(handlers.DeleteSermonHandler),
+	)
+
 	http.HandleFunc("/admin/add-announcement",
 		middleware.AdminOnly(handlers.CreateAnnouncementHandler),
 	)
-
 	log.Println("🚀 Server running on http://localhost:8080")
 
 	log.Fatal(http.ListenAndServe(":8080", nil))

@@ -8,20 +8,39 @@ import (
 	"Flaming_Sword_Ministry/middleware"
 )
 
+type HomePageData struct {
+	Name          string
+	Sermons       interface{}
+	Announcements interface{}
+}
+
 func HomeHandler(w http.ResponseWriter, r *http.Request) {
 
+	// Get logged-in user (if any)
 	session, _ := middleware.Store.Get(r, "church-session")
 
-	name, ok := session.Values["name"].(string)
+	name, _ := session.Values["name"].(string)
 
-	announcements, _ := database.GetAnnouncements()
+	// Load sermons
+	sermons, _ := database.GetAllSermons()
 
-	data := map[string]interface{}{
-		"LoggedIn":      ok,
-		"Name":          name,
-		"Announcements": announcements,
+	// Load announcements
+	announcements, _ := database.GetAllAnnouncements()
+
+	data := HomePageData{
+		Name:          name,
+		Sermons:       sermons,
+		Announcements: announcements,
 	}
 
-	tmpl, _ := template.ParseFiles("templates/home.html")
-	tmpl.Execute(w, data)
+	tmpl, err := template.ParseFiles("templates/home.html")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	err = tmpl.Execute(w, data)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+	}
 }

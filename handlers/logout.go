@@ -10,9 +10,7 @@ func LogoutHandler(w http.ResponseWriter, r *http.Request) {
 
 	session, _ := middleware.Store.Get(r, "church-session")
 
-	delete(session.Values, "user_id")
-	delete(session.Values, "name")
-	delete(session.Values, "role")
+	session.Options.MaxAge = -1
 
 	session.Save(r, w)
 

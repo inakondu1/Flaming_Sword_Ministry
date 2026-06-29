@@ -1,18 +1,23 @@
 package database
 
-import "Flaming_Sword_Ministry/models"
+import (
+	"Flaming_Sword_Ministry/models"
+)
 
+// CreateAnnouncement inserts a new announcement.
 func CreateAnnouncement(title, message string) error {
 
 	_, err := DB.Exec(
-		"INSERT INTO announcements (title, message) VALUES (?, ?)",
-		title, message,
+		`INSERT INTO announcements (title, message) VALUES (?, ?)`,
+		title,
+		message,
 	)
 
 	return err
 }
 
-func GetAnnouncements() ([]models.Announcement, error) {
+// GetAllAnnouncements returns all announcements.
+func GetAllAnnouncements() ([]models.Announcement, error) {
 
 	rows, err := DB.Query(`
 		SELECT id, title, message
@@ -24,13 +29,35 @@ func GetAnnouncements() ([]models.Announcement, error) {
 	}
 	defer rows.Close()
 
-	var list []models.Announcement
+	var announcements []models.Announcement
 
 	for rows.Next() {
+
 		var a models.Announcement
-		rows.Scan(&a.ID, &a.Title, &a.Message)
-		list = append(list, a)
+
+		err := rows.Scan(
+			&a.ID,
+			&a.Title,
+			&a.Message,
+		)
+		if err != nil {
+			return nil, err
+		}
+
+		announcements = append(announcements, a)
 	}
 
-	return list, nil
+	return announcements, nil
+}
+
+// CountAnnouncements returns the total number of announcements.
+func CountAnnouncements() (int, error) {
+
+	var count int
+
+	err := DB.QueryRow(
+		`SELECT COUNT(*) FROM announcements`,
+	).Scan(&count)
+
+	return count, err
 }

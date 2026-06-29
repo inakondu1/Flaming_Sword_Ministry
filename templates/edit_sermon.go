@@ -5,7 +5,7 @@
 
 <meta charset="UTF-8">
 
-<title>Add Sermon</title>
+<title>Edit Sermon</title>
 
 <style>
 
@@ -15,59 +15,29 @@ body{
 }
 
 .container{
-
     width:700px;
-
     margin:40px auto;
-
     background:white;
-
     padding:30px;
-
-    border-radius:10px;
-
-    box-shadow:0 0 10px gray;
+    border-radius:8px;
 }
 
-h1{
-
-    text-align:center;
-
-    color:#8B0000;
-}
-
-input,
-textarea{
-
+input,textarea{
     width:100%;
-
     padding:12px;
-
-    margin-top:10px;
-
-    margin-bottom:20px;
+    margin-bottom:15px;
 }
 
 textarea{
-
     height:200px;
 }
 
 button{
-
     width:100%;
-
-    padding:15px;
-
+    padding:14px;
     background:#8B0000;
-
     color:white;
-
     border:none;
-
-    cursor:pointer;
-
-    font-size:16px;
 }
 
 </style>
@@ -78,15 +48,18 @@ button{
 
 <div class="container">
 
-<h1>Add New Sermon</h1>
+<h1>Edit Sermon</h1>
 
-<form method="POST" action="/admin/add-sermon">
+<form method="POST" action="/admin/edit-sermon">
+
+<input type="hidden" name="id" value="{{.ID}}">
 
 <label>Title</label>
 
 <input
 type="text"
 name="title"
+value="{{.Title}}"
 required
 >
 
@@ -95,14 +68,16 @@ required
 <input
 type="text"
 name="bible_verse"
+value="{{.BibleVerse}}"
 required
 >
 
-<label>Scripture References</label>
+<label>References</label>
 
 <input
 type="text"
 name="references"
+value="{{.References}}"
 >
 
 <label>Category</label>
@@ -110,6 +85,7 @@ name="references"
 <input
 type="text"
 name="category"
+value="{{.Category}}"
 >
 
 <label>Date</label>
@@ -117,6 +93,7 @@ name="category"
 <input
 type="date"
 name="date"
+value="{{.Date}}"
 >
 
 <label>Created By</label>
@@ -124,18 +101,16 @@ name="date"
 <input
 type="text"
 name="created_by"
+value="{{.CreatedBy}}"
 >
 
 <label>Content</label>
 
-<textarea
-name="content"
-required
-></textarea>
+<textarea name="content">{{.Content}}</textarea>
 
 <button type="submit">
 
-Save Sermon
+Update Sermon
 
 </button>
 
